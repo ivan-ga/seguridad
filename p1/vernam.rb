@@ -30,7 +30,22 @@ class Vernam
     resultado = c ^ CLAVE
     @mensaje_cifrado_binario = '0' + resultado.to_s(2)
 
-    @mensaje_cifrado = a.join('').unpack('C*')
+    y=[]
+    z=0
+    #separo por bytes (8 dígitos) el mensaje_cifrado_binario y lo almaceno en el array y
+    while z<@mensaje_cifrado_binario.length() do
+      arr=@mensaje_cifrado_binario[z..z+7]
+      y << '0b' + arr
+      z=z+8
+    end
+
+    #convierto cada byte a su equivalente en ASCII y lo almaceno en el array mc
+    mc=[]
+    y.each do |x|
+      mc << Integer(x).chr
+    end
+
+    @mensaje_cifrado = mc.join('')
   end
 
 
@@ -52,4 +67,4 @@ puts "Clave aleatoria: #{CLAVE.to_s(2)}"
 
 puts "Mensaje cifrado en binario: #{mensaje_a_cifrar.mensaje_cifrado_binario}"
 
-puts mensaje_a_cifrar.mensaje_cifrado
+puts "Mensaje cifrado: #{mensaje_a_cifrar.mensaje_cifrado}"
