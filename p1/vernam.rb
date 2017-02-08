@@ -119,6 +119,7 @@ case gets.strip
   when "2"
     puts ""
     m.descifrar()
+    
     puts "Mensaje cifrado: #{m.mensaje}"
 
     puts "Mensaje cifrado en binario: #{m.mensaje_cifrado_binario}"
