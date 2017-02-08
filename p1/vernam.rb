@@ -19,10 +19,10 @@ class Vernam
   end
 
   def cifrar
-    a=['0b']
+    a=['0b'] #tengo que añadir el 0b para que tome el número como binario
 
     @mensaje.each_byte do |c|
-        a << '0' + c.to_s(2)
+        a << '0' + c.to_s(2) #añado el 0 ya que lo simplifica por defecto
     end
 
     c=Integer(a.join(''))
@@ -48,6 +48,44 @@ class Vernam
     @mensaje_cifrado = mc.join('')
   end
 
+  def descifrar
+    a=['0b'] #tengo que añadir el 0b para que tome el número como binario
+
+    @mensaje.each_byte do |c|
+      puts c
+      if c.between?(64, 127) then
+        a << '0' + c.to_s(2) #añado el 0 ya que lo simplifica por defecto
+      elsif c.between?(0, 63) then
+        a << '00' + c.to_s(2) #añado el 00 ya que lo simplifica por defecto
+      else
+        a << c.to_s(2)
+      end
+    end
+
+    resultado=Integer(a.join(''))
+    @mensaje_cifrado_binario = resultado
+
+    c = resultado ^ CLAVE
+    @mensaje_original_binario = '0' + c.to_s(2)
+
+    y=[]
+    z=0
+    #separo por bytes (8 dígitos) el mensaje_cifrado_binario y lo almaceno en el array y
+    while z<@mensaje_original_binario.length() do
+      arr=@mensaje_original_binario[z..z+7]
+      y << '0b' + arr
+      z=z+8
+    end
+
+    #convierto cada byte a su equivalente en ASCII y lo almaceno en el array mc
+    mc=[]
+    y.each do |x|
+      mc << Integer(x).chr
+    end
+
+    @mensaje_cifrado = mc.join('') #la variable se llama mensaje_cifrado pero corresponde con el mensaje original.
+  end
+
 
 
 end
@@ -57,14 +95,18 @@ m1 = gets #almacena en la variable m1 el texto introducido por el usuario
 m1.delete!("\n") #elimino el salto de línea que se incluye por defecto
 
 mensaje_a_cifrar = Vernam.new(m1)
-mensaje_a_cifrar.cifrar()
+# mensaje_a_cifrar.cifrar()
+#
+# puts "Mensaje original: #{m1}"
+#
+# puts "Mensaje original en binario: #{mensaje_a_cifrar.mensaje_original_binario.to_s(2)}"
+#
+# puts "Clave aleatoria: #{CLAVE.to_s(2)}"
+#
+# puts "Mensaje cifrado en binario: #{mensaje_a_cifrar.mensaje_cifrado_binario}"
+#
+# puts "Mensaje cifrado: #{mensaje_a_cifrar.mensaje_cifrado}"
 
-puts "Mensaje original: #{m1}"
+mensaje_a_cifrar.descifrar()
 
-puts "Mensaje original en binario: #{mensaje_a_cifrar.mensaje_original_binario.to_s(2)}"
-
-puts "Clave aleatoria: #{CLAVE.to_s(2)}"
-
-puts "Mensaje cifrado en binario: #{mensaje_a_cifrar.mensaje_cifrado_binario}"
-
-puts "Mensaje cifrado: #{mensaje_a_cifrar.mensaje_cifrado}"
+puts mensaje_a_cifrar.mensaje_cifrado
