@@ -52,7 +52,6 @@ class Vernam
     a=['0b'] #tengo que añadir el 0b para que tome el número como binario
 
     @mensaje.each_byte do |c|
-      puts c
       if c.between?(64, 127) then
         a << '0' + c.to_s(2) #añado el 0 ya que lo simplifica por defecto
       elsif c.between?(0, 63) then
@@ -93,20 +92,38 @@ end
 print "Inserte mensaje: "
 m1 = gets #almacena en la variable m1 el texto introducido por el usuario
 m1.delete!("\n") #elimino el salto de línea que se incluye por defecto
+puts ""
+m = Vernam.new(m1)
 
-mensaje_a_cifrar = Vernam.new(m1)
-# mensaje_a_cifrar.cifrar()
-#
-# puts "Mensaje original: #{m1}"
-#
-# puts "Mensaje original en binario: #{mensaje_a_cifrar.mensaje_original_binario.to_s(2)}"
-#
-# puts "Clave aleatoria: #{CLAVE.to_s(2)}"
-#
-# puts "Mensaje cifrado en binario: #{mensaje_a_cifrar.mensaje_cifrado_binario}"
-#
-# puts "Mensaje cifrado: #{mensaje_a_cifrar.mensaje_cifrado}"
+puts "MENU"
+puts "==========="
+puts ""
+puts "Elige una opción
+1: Cifrar
+2: Descifrar"
 
-mensaje_a_cifrar.descifrar()
+case gets.strip
+  when "1"
+    puts ""
+    m.cifrar()
 
-puts mensaje_a_cifrar.mensaje_cifrado
+    puts "Mensaje original: #{m.mensaje}"
+
+    puts "Mensaje original en binario: #{m.mensaje_original_binario.to_s(2)}"
+
+    puts "Clave aleatoria: #{CLAVE.to_s(2)}"
+
+    puts "Mensaje cifrado en binario: #{m.mensaje_cifrado_binario}"
+
+    puts "Mensaje cifrado: #{m.mensaje_cifrado}"
+  when "2"
+    puts ""
+    m.descifrar()
+    puts "Mensaje cifrado: #{m.mensaje}"
+
+    puts "Mensaje cifrado en binario: #{m.mensaje_cifrado_binario}"
+
+    puts "Mensaje descifrado en binario: #{m.mensaje_original_binario}"
+
+    puts "Mensaje descifrado: #{m.mensaje_cifrado}"
+end
