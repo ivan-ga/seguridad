@@ -1,8 +1,11 @@
-#Práctica 1: cifrado de vernam
+#Práctica 1: Cifrado de Vernam
 #Autor: Iván González Aguiar
 #alu0100551266@ull.edu.es
 
 CLAVE = 0b001111000001100001110011 #clave para el cifrado
+#CLAVE = 0b0000111100100001 #clave para el segundo ejemplo
+#CLAVE =  0b00111100000110000111001100000000
+#CLAVE = 0b01010101
 
 class Vernam
   attr_accessor :mensaje
@@ -119,7 +122,7 @@ case gets.strip
   when "2"
     puts ""
     m.descifrar()
-    
+
     puts "Mensaje cifrado: #{m.mensaje}"
 
     puts "Mensaje cifrado en binario: #{m.mensaje_cifrado_binario}"
