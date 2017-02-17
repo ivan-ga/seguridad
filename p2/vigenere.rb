@@ -30,7 +30,17 @@ class Vigenere
 
     resultado = []
     mensaje_bloques.each_with_index do |val, i|
-
+      j = 0
+      while j<val.length() do
+        clave.split('').each do |c|
+          if ALFABETO[ALFABETO[val[i][j]]+ALFABETO[c]] < 26
+            resultado << ALFABETO[ALFABETO[val[i][j]]+ALFABETO[c]] < 26
+          else
+            resultado << (ALFABETO[ALFABETO[val[i][j]]+ALFABETO[c]]) % 26
+          end
+          j = j+1
+        end
+      end
     end
 
   end
@@ -55,6 +65,9 @@ c1.delete!(' ') #elimino los espacios
 c1 = c1.upcase #se pasa la clave a mayúsculas
 puts " "
 
+c1.split('').each { |c|
+    puts c
+}
 # arr=m1.chars.each_slice(2).map(&:join)
 #
 # puts arr
