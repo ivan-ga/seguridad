@@ -31,18 +31,21 @@ class Vigenere
     puts ""
     mensaje_bloques.each_with_index do |val, i|
       j = 0
+      puts val.length()
       while j<val.length() do
-        clave.split('').each do |c|
-          num = ALFABETO[val[i][j]].to_i + ALFABETO[c].to_i
-          puts "i: #{i}"
-          puts "j: #{j}"
-          puts "val: #{val[i][j]}"
-          puts "c: #{c}"
-          puts num
-          if num < 26
-            resultado << ALFABETO.key(num)
-          else
-            resultado << ALFABETO.key(num % 26)
+        val.split('').each do |v|
+          clave.split('').each do |c|
+            num = ALFABETO[v].to_i + ALFABETO[c].to_i
+            puts "i: #{i}"
+            puts "j: #{j}"
+            puts "val: #{v}"
+            puts "c: #{c}"
+            puts num
+            if num < 26
+              resultado << ALFABETO.key(num)
+            else
+              resultado << ALFABETO.key(num % 26)
+            end
           end
           #puts resultado
           #puts ""
