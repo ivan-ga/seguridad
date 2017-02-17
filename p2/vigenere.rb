@@ -8,6 +8,8 @@ ALFABETO = {"A"=>0,"B"=> 1,"C"=> 2,"D"=> 3,"E"=> 4,"F"=> 5,"G"=> 6,"H"=> 7,
 "I"=> 8,"J"=> 9, "K"=>10, "L"=>11, "M"=>12, "N"=>13, "O"=>14, "P"=>15, "Q"=>16,
 "R"=>17, "S"=>18, "T"=>19, "U"=>20, "V"=>21, "W"=>22, "X"=>23, "Y"=>24, "Z"=>25}
 
+TAM_ALFABETO = ALFABETO.size() #tamaño del alfabeto
+
 class Vigenere
   attr_accessor :mensaje_original
   attr_accessor :mensaje_original_binario
@@ -27,33 +29,50 @@ class Vigenere
     mensaje_bloques = mensaje_original.chars.each_slice(tam_clave).map(&:join) #array con el mensaje dividido en bloques del mismo tamaño que la clave
 
     resultado = []
-    print mensaje_bloques
-    puts ""
+
     mensaje_bloques.each_with_index do |val, i|
       j = 0
-      puts val.length()
-      #while j<val.length() do
-        clave.split('').each do |c|
-          num = ALFABETO[val[j]].to_i + ALFABETO[c].to_i
-          puts "i: #{i}"
-          puts "j: #{j}"
-          puts "val: #{val[j]}"
-          puts "c: #{c}"
-          puts num
-          if num < 26
-            resultado << ALFABETO.key(num)
-          else
-            resultado << ALFABETO.key(num % 26)
-          end
-          #puts resultado
-          #puts ""
-          j = j+1
-          break if (j>=val.length())
+      clave.split('').each do |c|
+        num = ALFABETO[val[j]].to_i + ALFABETO[c].to_i
+
+        if num < 26
+          resultado << ALFABETO.key(num)
+        else
+          resultado << ALFABETO.key(num % TAM_ALFABETO)
         end
-      #end
+
+        j = j+1
+        break if (j>=val.length())
+      end
     end
     @mensaje_cifrado = resultado.join('')
   end
+
+  def descifrar(clave)
+    tam_clave = clave.length() #variable que almacena el tamaño de la clave
+
+    mensaje_bloques = mensaje_original.chars.each_slice(tam_clave).map(&:join) #array con el mensaje dividido en bloques del mismo tamaño que la clave
+
+    resultado = []
+
+    mensaje_bloques.each_with_index do |val, i|
+      j = 0
+      clave.split('').each do |c|
+        num = ALFABETO[val[j]].to_i - ALFABETO[c].to_i
+        if num >= 0
+          resultado << ALFABETO.key(num)
+        else
+          resultado << ALFABETO.key(num % TAM_ALFABETO)
+        end
+
+        j = j+1
+        break if (j>=val.length())
+      end
+    end
+    @mensaje_cifrado = resultado.join('') #en este caso es el mensaje descifrado lo que almacena
+
+  end
+
 end
 
 print "Inserte mensaje: "
@@ -76,15 +95,27 @@ c1 = c1.upcase #se pasa la clave a mayúsculas
 puts " "
 
 m = Vigenere.new(m1)
-m.cifrar(c1)
-puts "Mensaje original: #{m.mensaje_original}"
-puts "Mensaje cifrado: #{m.mensaje_cifrado}"
-# arr=m1.chars.each_slice(2).map(&:join)
-#
-# puts arr
-# puts arr[0][0]
 
-# h = {'A'=>1, 'B'=>7}
-# s = 'A'
-#
-# puts h[s]
+puts "MENU"
+puts "==========="
+puts ""
+puts "Elige una opción:
+1: Cifrar
+2: Descifrar"
+
+case gets.strip
+  when "1"
+    puts ""
+    m.cifrar(c1)
+
+    puts "Mensaje original: #{m.mensaje_original}"
+
+    puts "Mensaje cifrado: #{m.mensaje_cifrado}"
+  when "2"
+    puts ""
+    m.descifrar(c1)
+
+    puts "Mensaje original: #{m.mensaje_original}"
+
+    puts "Mensaje descifrado: #{m.mensaje_cifrado}"
+end
