@@ -31,12 +31,13 @@ class Vigenere
     puts ""
     mensaje_bloques.each_with_index do |val, i|
       j = 0
-      while j<val.length() do
+      puts val.length()
+      #while j<val.length() do
         clave.split('').each do |c|
-          num = ALFABETO[val[i][j]].to_i + ALFABETO[c].to_i
+          num = ALFABETO[val[j]].to_i + ALFABETO[c].to_i
           puts "i: #{i}"
           puts "j: #{j}"
-          puts "val: #{val[i][j]}"
+          puts "val: #{val[j]}"
           puts "c: #{c}"
           puts num
           if num < 26
@@ -47,8 +48,9 @@ class Vigenere
           #puts resultado
           #puts ""
           j = j+1
+          break if (j>=val.length())
         end
-      end
+      #end
     end
     @mensaje_cifrado = resultado.join('')
   end
