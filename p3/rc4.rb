@@ -57,6 +57,7 @@ class Rc4
 
     end
   end
+
 end
 
 ################################################################################
@@ -70,6 +71,22 @@ m1 = gets #almacena en la variable m1 el texto introducido por el usuario
 m1.delete!("\n") #elimino el salto de línea que se incluye por defecto
 r.mensaje_original = m1.split(" ")
 puts " "
-r.cifrar()
+puts "MENU"
+puts "==========="
+puts ""
+puts "Elige una opción:
+1: Cifrar
+2: Descifrar"
 
-puts "Mensaje cifrado: #{r.mensaje_cifrado.join(" ")}"
+case gets.strip
+  when "1"
+    puts ""
+    r.cifrar()
+    puts "Mensaje original: #{r.mensaje_original.join(" ")}"
+    puts "Mensaje cifrado: #{r.mensaje_cifrado.join(" ")}"
+  when "2"
+    puts ""
+    r.cifrar()
+    puts "Mensaje cifrado: #{r.mensaje_original.join(" ")}"
+    puts "Mensaje original: #{r.mensaje_cifrado.join(" ")}"
+end
