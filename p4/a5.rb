@@ -93,8 +93,8 @@ class A5
     m_bin = Integer(m_bin.join('')) #convierto a entero el string binario
     tam_mensaje = @mensaje_original_binario.length() - 2 #resto 2 para no contar el 0b
 
-    puts "Mensaje en binario: #{@mensaje_original_binario}"
-    puts "tam #{tam_mensaje}"
+    #puts "Mensaje en binario: #{@mensaje_original_binario}"
+    #puts "tam #{tam_mensaje}"
 
     #Registros
     r1 = Array.new(19) #del 0 al 18
@@ -124,11 +124,13 @@ class A5
     r3.delete(nil)
 
     #imprimo los registros inicializados
+    puts "ITERACION 0"
     print "r1: #{r1}"
     puts ""
     print "r2: #{r2}"
     puts ""
     print "r3: #{r3}"
+    puts ""
     puts ""
 
     #Cálculo de la clave
@@ -137,85 +139,105 @@ class A5
 
       #Calcular bit que sale
       cl << (r1[18].to_i^r2[21].to_i^r3[22].to_i)
+      puts "Bits de clave: #{cl.join('')}"
 
       #Calcular mayoria para saber que registro se mueve
       mayoria = calcular_mayoria(r1, r2, r3)
 
       if mayoria #la mayoria es 1
         if r1[8] == 1
-          puts "eeeeeeeeeeee1"
+          puts "Se desplaza r1"
           aux = (r1[18]^r1[17]^r1[16]) #valor para la retroalimentación
           array_aux = r1.desplazar(1)
           array_aux[0] = aux
           r1 = array_aux
-          puts "aux1: #{aux}"
         end
 
         if r2[10] == 1
-          puts "eeeeeeeeeeee2"
+          puts "Se desplaza r2"
           aux2 = (r2[21]^r2[20]) #valor para la retroalimentación
           array_aux2 = r2.desplazar(2)
           array_aux2[0] = aux2
           r2 = array_aux2
-          puts "aux2: #{aux2}"
         end
 
 
         if r3[10] == 1
-          puts "eeeeeeeeeeee3"
+          puts "Se desplaza r3"
           aux3 = (r3[22]^r3[21]^r3[20]^r3[7]) #valor para la retroalimentación
           array_aux3 = r3.desplazar(3)
           array_aux3[0] = aux3
           r3 = array_aux3
-          puts "aux3: #{aux3}"
         end
 
       else #la mayoria es 0
         if r1[8] == 0
-          puts "eeeeeeeeeeee1"
+          puts "Se desplaza r1"
           aux = (r1[18]^r1[17]^r1[16]) #valor para la retroalimentación
           array_aux = r1.desplazar(1)
           array_aux[0] = aux #inserto el valor de la retroalimentación en la primera posición
           r1 = array_aux
-          puts "aux1: #{aux}"
         end
 
         if r2[10] == 0
-          puts "eeeeeeeeeeee2"
+          puts "Se desplaza r2"
           aux2 = (r2[21]^r2[20]) #valor para la retroalimentación
           array_aux2 = r2.desplazar(2)
           array_aux2[0] = aux2 #inserto el valor de la retroalimentación en la primera posición
           r2 = array_aux2
-          puts "aux2: #{aux2}"
         end
 
         if r3[10] == 0
-          puts "eeeeeeeeeeee3"
+          puts "Se desplaza r3"
           aux3 = (r3[22]^r3[21]^r3[20]^r3[7]) #valor para la retroalimentación
           array_aux3 = r3.desplazar(3)
           array_aux3[0] = aux3 #inserto el valor de la retroalimentación en la primera posición
           r3 = array_aux3
-          puts "aux3: #{aux3}"
         end
       end
-      puts "iteracion #{iter+1}"
-      print "r1: #{r1}"
+
       puts ""
-      print "r2: #{r2}"
       puts ""
-      print "r3: #{r3}"
-      puts ""
+      if iter + 1 >= tam_mensaje
+        puts "Registros finales:"
+        print "r1: #{r1}"
+        puts ""
+        print "r2: #{r2}"
+        puts ""
+        print "r3: #{r3}"
+        puts ""
+        puts ""
+      else
+        puts "ITERACION #{iter+1}"
+        print "r1: #{r1}"
+        puts ""
+        print "r2: #{r2}"
+        puts ""
+        print "r3: #{r3}"
+        puts ""
+        puts ""
+      end
       iter = iter + 1
 
     end
+    puts "A5/1 finalizado"
 
-    clave = Integer(cl.join(''))
-    print cl
+
+    clave = Integer('0b' + cl.join(''))
     puts ""
-    puts clave.to_s(2)
+    puts "Clave: #{'0b' + cl.join('')}"
     puts ""
+
     resultado = m_bin^clave
     resultado = resultado.to_s(2)
+    if resultado.length() < tam_mensaje
+      n = tam_mensaje - resultado.length()
+      n.times do |x|
+        resultado.insert(0, '0')
+      end
+    end
+    puts "resul: #{resultado}"
+    @mensaje_cifrado_binario = '0b' + resultado
     y=[]
     z=2
     #separo por bytes (8 dígitos) el mensaje_cifrado_binario y lo almaceno en el array y
@@ -234,13 +256,43 @@ class A5
 
     @mensaje_cifrado = mc.join('')
 
-    puts "resultado: #{resultado}"
-    puts "mensaje cifrado: #{@mensaje_cifrado}"
-
   end
 
 end
 
-m = "O"
-me = A5.new(m)
-me.cifrar()
+
+#######################################################################
+# m = "O"
+# me = A5.new(m)
+# me.cifrar()
+
+print "Inserte mensaje: "
+m1 = gets #almacena en la variable m1 el texto introducido por el usuario
+
+#se le da el formato adecuado al mensaje introducido por el usuario
+m1.delete!("\n") #elimino el salto de línea que se incluye por defecto
+m1.split(" ") #elimino espacios
+r = A5.new(m1)
+
+puts " "
+puts "MENU"
+puts "==========="
+puts ""
+puts "Elige una opción:
+1: Cifrar
+2: Descifrar"
+
+case gets.strip
+  when "1"
+    puts ""
+    r.cifrar()
+    puts "Mensaje original: #{r.mensaje_original}"
+    puts "Mensaje original en binario: #{r.mensaje_original_binario}"
+    puts "Mensaje cifrado en binario: #{r.mensaje_cifrado_binario}"
+    puts "Mensaje cifrado: #{r.mensaje_cifrado}"
+  when "2"
+    puts ""
+    r.cifrar()
+    puts "Mensaje cifrado: #{r.mensaje_original.join(" ")}"
+    puts "Mensaje original: #{r.mensaje_cifrado.join(" ")}"
+end
