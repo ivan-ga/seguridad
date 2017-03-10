@@ -86,7 +86,15 @@ class A5
     m_bin = ['0b'] #tengo que añadir el 0b para que tome el número como binario
 
     @mensaje_original.each_byte do |c|
-        m_bin << '0' + c.to_s(2) #añado el 0 ya que lo simplifica por defecto
+
+        if c.between?(64, 127) then
+          m_bin << '0' + c.to_s(2) #añado el 0 ya que lo simplifica por defecto
+        elsif c.between?(0, 63) then
+          m_bin << '00' + c.to_s(2) #añado el 00 ya que lo simplifica por defecto
+        else
+          m_bin << c.to_s(2)
+        end
+
     end
 
     @mensaje_original_binario = m_bin.join('') #uno el array y lo convierto a entero
@@ -236,15 +244,17 @@ class A5
         resultado.insert(0, '0')
       end
     end
-    puts "resul: #{resultado}"
+    #puts "#{resultado}"
     @mensaje_cifrado_binario = '0b' + resultado
     y=[]
-    z=2
+    z=0
     #separo por bytes (8 dígitos) el mensaje_cifrado_binario y lo almaceno en el array y
     while z<resultado.length() do
       arr=resultado[z..z+7]
       y << '0b' + arr
       z=z+8
+      #print "arr: #{arr}"
+      #puts ""
     end
 
     #convierto cada byte a su equivalente en ASCII y lo almaceno en el array mc
@@ -271,7 +281,7 @@ m1 = gets #almacena en la variable m1 el texto introducido por el usuario
 
 #se le da el formato adecuado al mensaje introducido por el usuario
 m1.delete!("\n") #elimino el salto de línea que se incluye por defecto
-m1.split(" ") #elimino espacios
+m1.gsub!(/\s+/, '') #elimino espacios
 r = A5.new(m1)
 
 puts " "
@@ -293,6 +303,11 @@ case gets.strip
   when "2"
     puts ""
     r.cifrar()
-    puts "Mensaje cifrado: #{r.mensaje_original.join(" ")}"
-    puts "Mensaje original: #{r.mensaje_cifrado.join(" ")}"
+    puts "Mensaje cifrado: #{r.mensaje_original}"
+    puts "Mensaje cifrado en binario: #{r.mensaje_original_binario}"
+    puts "Mensaje original en binario: #{r.mensaje_cifrado_binario}"
+    puts "Mensaje original: #{r.mensaje_cifrado}"
 end
+
+puts ""
+puts ""
