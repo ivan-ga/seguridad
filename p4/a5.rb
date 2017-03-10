@@ -32,15 +32,15 @@ class Array
 
 end
 
-class Integer
-
-	  def num_digitos
-
-	      self.to_s.size
-
-	  end
-
-end
+# class Integer
+#
+# 	  def num_digitos
+#
+# 	      self.to_s.size
+#
+# 	  end
+#
+# end
 
 class A5
 
