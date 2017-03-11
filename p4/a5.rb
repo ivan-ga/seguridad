@@ -9,7 +9,7 @@ SR1 = '1001000100011010001'
 SR2 = '0101100111100010011010'
 SR3 = '10111100110111100001111'
 
-
+#Abriendo clase Array para implementar un método para desplazar dentro de los registros
 class Array
 
   def desplazar(registro)
@@ -67,8 +67,8 @@ class A5
     mayoria[1] = r2[10] #es el 10 en vez de 11 porque empiezo en 0
     mayoria[2] = r3[10] #es el 10 en vez de 11 porque empiezo en 0
 
-    cuenta_ceros = mayoria.count(0)
-    cuenta_unos = mayoria.count(1)
+    cuenta_ceros = mayoria.count(0) #cuenta el numero de 0
+    cuenta_unos = mayoria.count(1) #cuenta el numero de unos
 
     if cuenta_ceros > cuenta_unos
       puts "Mayoria: 0"
@@ -97,7 +97,7 @@ class A5
 
     end
 
-    @mensaje_original_binario = m_bin.join('') #uno el array y lo convierto a entero
+    @mensaje_original_binario = m_bin.join('')
     m_bin = Integer(m_bin.join('')) #convierto a entero el string binario
     tam_mensaje = @mensaje_original_binario.length() - 2 #resto 2 para no contar el 0b
 
@@ -181,7 +181,7 @@ class A5
       else #la mayoria es 0
         if r1[8] == 0
           puts "Se desplaza r1"
-          aux = (r1[18]^r1[17]^r1[16]) #valor para la retroalimentación
+          aux = (r1[18]^r1[17]^r1[16]^r1[13]) #valor para la retroalimentación
           array_aux = r1.desplazar(1)
           array_aux[0] = aux #inserto el valor de la retroalimentación en la primera posición
           r1 = array_aux
