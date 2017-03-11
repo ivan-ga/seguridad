@@ -236,12 +236,13 @@ class A5
     puts "Clave: #{'0b' + cl.join('')}"
     puts ""
 
+    #Cifrando mensaje
     resultado = m_bin^clave
     resultado = resultado.to_s(2)
-    if resultado.length() < tam_mensaje
+    if resultado.length() < tam_mensaje #para evitar que elimine los ceros a la izquierda
       n = tam_mensaje - resultado.length()
       n.times do |x|
-        resultado.insert(0, '0')
+        resultado.insert(0, '0') #inserta los 0 que faltan
       end
     end
     #puts "#{resultado}"
