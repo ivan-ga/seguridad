@@ -359,6 +359,7 @@ puts "Elige una opción:
 2: Números binarios"
 
 opc = gets #almacena opcion
+opc = opc.to_i #para que me funcionen bien los if lo paso a entero
 
 print "Inserte mensaje: "
 m1 = gets #almacena en la variable m1 el texto introducido por el usuario

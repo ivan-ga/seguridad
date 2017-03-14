@@ -83,7 +83,7 @@ class A5
   def cifrar(opcion)
 
     m_bin = ['0b'] #tengo que añadir el 0b para que tome el número como binario
-
+    puts "opcion: #{opcion}"
     if opcion == 1
 
       #Convirtiendo mensaje a binario
@@ -318,6 +318,7 @@ puts "Elige una opción:
 2: Números binarios"
 
 opc = gets #almacena opcion
+opc = opc.to_i #para que me funcionen bien los if lo paso a entero
 
 print "Inserte mensaje: "
 m1 = gets #almacena en la variable m1 el texto introducido por el usuario
