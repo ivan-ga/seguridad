@@ -80,26 +80,39 @@ class A5
 
   end
 
-  def cifrar
+  def cifrar(opcion)
 
-    #Convirtiendo mensaje a binario
     m_bin = ['0b'] #tengo que añadir el 0b para que tome el número como binario
 
-    @mensaje_original.each_byte do |c|
+    if opcion == 1
 
-        if c.between?(64, 127) then
-          m_bin << '0' + c.to_s(2) #añado el 0 ya que lo simplifica por defecto
-        elsif c.between?(0, 63) then
-          m_bin << '00' + c.to_s(2) #añado el 00 ya que lo simplifica por defecto
-        else
-          m_bin << c.to_s(2)
-        end
+      #Convirtiendo mensaje a binario
+      @mensaje_original.each_byte do |c|
+
+          if c.between?(64, 127) then
+            m_bin << '0' + c.to_s(2) #añado el 0 ya que lo simplifica por defecto
+          elsif c.between?(0, 63) then
+            m_bin << '00' + c.to_s(2) #añado el 00 ya que lo simplifica por defecto
+          else
+            m_bin << c.to_s(2)
+          end
+
+      end
+
+      @mensaje_original_binario = m_bin.join('')
+      m_bin = Integer(m_bin.join('')) #convierto a entero el string binario
+      tam_mensaje = @mensaje_original_binario.length() - 2 #resto 2 para no contar el 0b
+
+    else
+
+      m_bin << @mensaje_original
+      m_bin = m_bin.join('') #en este caso este es el mensaje original en binario
+      tam_mensaje = m_bin.length() - 2 #resto 2 para no contar el 0b
+      @mensaje_original_binario = Integer(m_bin) #aqui se almacenará su equivalente en decimal
+
+      #puts "#{tam_mensaje}"
 
     end
-
-    @mensaje_original_binario = m_bin.join('')
-    m_bin = Integer(m_bin.join('')) #convierto a entero el string binario
-    tam_mensaje = @mensaje_original_binario.length() - 2 #resto 2 para no contar el 0b
 
     #puts "Mensaje en binario: #{@mensaje_original_binario}"
     #puts "tam #{tam_mensaje}"
@@ -236,36 +249,55 @@ class A5
     puts "Clave: #{'0b' + cl.join('')}"
     puts ""
 
-    #Cifrando mensaje
-    resultado = m_bin^clave
-    resultado = resultado.to_s(2)
-    if resultado.length() < tam_mensaje #para evitar que elimine los ceros a la izquierda
-      n = tam_mensaje - resultado.length()
-      n.times do |x|
-        resultado.insert(0, '0') #inserta los 0 que faltan
+    if opcion == 1
+
+      #Cifrando mensaje
+      resultado = m_bin^clave
+      resultado = resultado.to_s(2)
+      if resultado.length() < tam_mensaje #para evitar que elimine los ceros a la izquierda
+        n = tam_mensaje - resultado.length()
+        n.times do |x|
+          resultado.insert(0, '0') #inserta los 0 que faltan
+        end
       end
-    end
-    #puts "#{resultado}"
-    @mensaje_cifrado_binario = '0b' + resultado
-    y=[]
-    z=0
-    #separo por bytes (8 dígitos) el mensaje_cifrado_binario y lo almaceno en el array y
-    while z<resultado.length() do
-      arr=resultado[z..z+7]
-      y << '0b' + arr
-      z=z+8
-      #print "arr: #{arr}"
-      #puts ""
+      #puts "#{resultado}"
+      @mensaje_cifrado_binario = '0b' + resultado
+
+      y=[]
+      z=0
+      #separo por bytes (8 dígitos) el mensaje_cifrado_binario y lo almaceno en el array y
+      while z<resultado.length() do
+        arr=resultado[z..z+7]
+        y << '0b' + arr
+        z=z+8
+        #print "arr: #{arr}"
+        #puts ""
+      end
+
+      #convierto cada byte a su equivalente en ASCII y lo almaceno en el array mc
+      mc=[]
+      y.each do |x|
+        #puts x
+        mc << Integer(x).chr
+      end
+
+      @mensaje_cifrado = mc.join('')
+    else
+
+      #Cifrando mensaje
+      resultado = @mensaje_original_binario^clave
+      resultado = resultado.to_s(2)
+      if resultado.length() < tam_mensaje #para evitar que elimine los ceros a la izquierda
+        n = tam_mensaje - resultado.length()
+        n.times do |x|
+          resultado.insert(0, '0') #inserta los 0 que faltan
+        end
+      end
+
+      @mensaje_cifrado_binario = '0b' + resultado
+
     end
 
-    #convierto cada byte a su equivalente en ASCII y lo almaceno en el array mc
-    mc=[]
-    y.each do |x|
-      #puts x
-      mc << Integer(x).chr
-    end
-
-    @mensaje_cifrado = mc.join('')
 
   end
 
@@ -276,6 +308,16 @@ end
 # m = "O"
 # me = A5.new(m)
 # me.cifrar()
+
+puts " "
+puts "MENU"
+puts "==========="
+puts ""
+puts "Elige una opción:
+1: Letras
+2: Números binarios"
+
+opc = gets #almacena opcion
 
 print "Inserte mensaje: "
 m1 = gets #almacena en la variable m1 el texto introducido por el usuario
@@ -296,18 +338,26 @@ puts "Elige una opción:
 case gets.strip
   when "1"
     puts ""
-    r.cifrar()
+    r.cifrar(opc)
     puts "Mensaje original: #{r.mensaje_original}"
-    puts "Mensaje original en binario: #{r.mensaje_original_binario}"
+    if opc == 1
+      puts "Mensaje original en binario: #{r.mensaje_original_binario}"
+    end
     puts "Mensaje cifrado en binario: #{r.mensaje_cifrado_binario}"
-    puts "Mensaje cifrado: #{r.mensaje_cifrado}"
+    if opc == 1
+      puts "Mensaje cifrado: #{r.mensaje_cifrado}"
+    end
   when "2"
     puts ""
-    r.cifrar()
+    r.cifrar(opc)
     puts "Mensaje cifrado: #{r.mensaje_original}"
-    puts "Mensaje cifrado en binario: #{r.mensaje_original_binario}"
+    if opc == 1
+      puts "Mensaje original en binario: #{r.mensaje_original_binario}"
+    end
     puts "Mensaje original en binario: #{r.mensaje_cifrado_binario}"
-    puts "Mensaje original: #{r.mensaje_cifrado}"
+    if opc == 1
+      puts "Mensaje cifrado: #{r.mensaje_cifrado}"
+    end
 end
 
 puts ""

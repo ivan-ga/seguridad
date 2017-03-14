@@ -115,7 +115,7 @@ class A5
       tam_mensaje = m_bin.length() - 2 #resto 2 para no contar el 0b
       @mensaje_original_binario = Integer(m_bin) #aqui se almacenará su equivalente en decimal
 
-      puts "#{tam_mensaje}"
+      #puts "#{tam_mensaje}"
 
     end
     #puts "Mensaje en binario: #{@mensaje_original_binario}"
