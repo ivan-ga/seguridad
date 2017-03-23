@@ -7,3 +7,6 @@ def crearmatriz(filas, columnas)
   end
   aux
 end
+
+m = crearmatriz(4,4)
+print m
