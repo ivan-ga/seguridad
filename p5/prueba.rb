@@ -9,4 +9,7 @@ def crearmatriz(filas, columnas)
 end
 
 m = crearmatriz(4,4)
+
+m[1][1] = 8
 print m
+puts "ffffffffff: #{m[1][1]}"
