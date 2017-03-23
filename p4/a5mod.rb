@@ -57,6 +57,7 @@ class A5
     @mensaje_original_binario = nil
     @mensaje_cifrado = nil
     @mensaje_cifrado_binario = nil
+    @mensaje_original2 = nil
 
   end
 
@@ -166,8 +167,9 @@ class A5
     while iter<(n + tam_mensaje) do
 
       #Calcular bit que sale
-      cl << (r1[18].to_i^r2[21].to_i^r3[22].to_i)
       if iter >= n
+        cl << (r1[18].to_i^r2[21].to_i^r3[22].to_i)
+      #if iter >= n
         puts "Bits de clave: #{cl.join('')}"
       end
 
@@ -304,7 +306,6 @@ class A5
       end
       #puts "#{resultado}"
       @mensaje_cifrado_binario = '0b' + resultado
-
       y=[]
       z=0
       #separo por bytes (8 dígitos) el mensaje_cifrado_binario y lo almaceno en el array y
@@ -389,6 +390,24 @@ case gets.strip
     if opc == 1
       puts "Mensaje cifrado: #{r.mensaje_cifrado}"
     end
+    puts ""
+    puts "DESCIFRADO:"
+    if opc == 1
+      r1 = A5.new(r.mensaje_cifrado)
+    else
+      r.mensaje_cifrado_binario.slice!('0b') #quito el 0b que le había añadido en el cifrado
+      r1 = A5.new(r.mensaje_cifrado_binario)
+    end
+    r1.cifrar(opc)
+    puts "Mensaje cifrado: #{r.mensaje_original}"
+    if opc == 1
+      puts "Mensaje original en binario: #{r.mensaje_original_binario}"
+    end
+    puts "Mensaje original en binario: #{r.mensaje_cifrado_binario}"
+    if opc == 1
+      puts "Mensaje original: #{r.mensaje_cifrado}"
+    end
+
   when "2"
     puts ""
     r.cifrar(opc)
@@ -398,7 +417,7 @@ case gets.strip
     end
     puts "Mensaje original en binario: #{r.mensaje_cifrado_binario}"
     if opc == 1
-      puts "Mensaje cifrado: #{r.mensaje_cifrado}"
+      puts "Mensaje original: #{r.mensaje_cifrado}"
     end
 end
 
