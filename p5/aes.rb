@@ -52,6 +52,24 @@ class Matriz
 
   end
 
+  #CALCULA LA TRASPUESTA DE LA MATRIZ
+  def traspuesta
+    i=0 #filas
+    aux = Matriz.new(self.columnas, self.filas)
+    aux.crear_matriz()
+    while i<filas do
+      j=0 #columnas
+      while j<columnas do
+        aux.set_elemento(get_elemento(i,j),j,i)
+        j=j+1
+      end
+      i=i+1
+    end
+
+    @valores = aux.valores
+
+  end
+
 end
 
 class Aes
@@ -70,24 +88,18 @@ class Aes
 
     mat = Matriz.new(4,4)
     mat.crear_matriz()
-    puts mat.filas
-    puts mat.columnas
+
     pares = dato.scan(/.{1,2}/)
     i=0
     j=0
     pares.each do |val|
       val = '0x' + val
-      puts val
-
-
 
       if i<mat.filas
         if j<mat.columnas
-          puts "hola #{i}#{j}"
           mat.set_elemento(val,i,j)
           j=j+1
         else
-          puts "hola2222222222222 #{i}#{j}"
           j=0
           i=i+1
           mat.set_elemento(val,i,j)
@@ -107,4 +119,5 @@ end
 
 pepe = Aes.new('00112233445566778899aabbccddeeff')
 a=pepe.generar_matriz(pepe.mensaje_original)
+a.traspuesta()
 a.mostrar()
