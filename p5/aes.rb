@@ -185,6 +185,13 @@ class Aes
     while j<16
       if j%4 == 0
         aux = @matriz_clave.desplazar_vertical(j)
+        fil = 0
+        while fil<@matriz_clave.filas
+          indices = aux[0].to_s.split('')
+          indice_x = indices[0].to_i
+          indice_y = indices[1].to_i
+
+        end
         #cambiar por valor de la caja s y hacer el xor
       else
         i=0

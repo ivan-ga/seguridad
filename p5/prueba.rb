@@ -8,8 +8,8 @@ def crearmatriz(filas, columnas)
   aux
 end
 
-m = crearmatriz(4,4)
-
-m[1][1] = 8
-print m
-puts "ffffffffff: #{m[1][1]}"
+num = 45
+arcadio = num.to_s.split('')
+num1 = arcadio[0].to_i
+puts num1.class
+puts num1
