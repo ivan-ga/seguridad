@@ -117,11 +117,12 @@ class Matriz
   #ROTWORD
   def desplazar_vertical(columna)
     arr_aux = []
-
-    arr_aux << @valores.get_elemento(1, columna)
-    arr_aux << @valores.get_elemento(2, columna)
-    arr_aux << @valores.get_elemento(3, columna)
-    arr_aux << @valores.get_elemento(0, columna)
+    #puts "columna: #{columna}"
+    arr_aux << @valores[1][columna]
+    #puts "desplaza: #{@valores[1][2]}"
+    arr_aux << @valores[2][columna]
+    arr_aux << @valores[3][columna]
+    arr_aux << @valores[0][columna]
 
     arr_aux
   end
@@ -143,6 +144,8 @@ class Aes
   attr_accessor :mensaje_original
   attr_accessor :mensaje_cifrado
   attr_accessor :clave
+  attr_accessor :matriz_estado
+  attr_accessor :matriz_clave
 
   def initialize(mensaje, clave)
     @mensaje_original = mensaje
@@ -180,27 +183,60 @@ class Aes
 
   end
 
-  def calcular_sublcaves
+  #DEVUELVE EL VALOR EN LA CAJA S
+  def busqueda_caja_s(v1, v2, matriz)
+    matriz.get_elemento(v1,v2)
+  end
+
+  def calcular_sublcaves(caj_s)
     j=4 #columnas
-    while j<16
-      if j%4 == 0
-        aux = @matriz_clave.desplazar_vertical(j)
+    #puts "j1: #{j}"
+    while j<40 #40 porque son 10 iteraciones con 4 columnas
+      multiplo = j%4
+      #puts "multiplo: #{multiplo}"
+      if (j%4).zero?
+        puts "jdentroif: #{j}"
+        aux = @matriz_clave.desplazar_vertical(j-1)
+        puts "aux: #{aux}"
         fil = 0
         while fil<@matriz_clave.filas
-          indices = aux[0].to_s.split('')
-          indice_x = indices[0].to_i
-          indice_y = indices[1].to_i
+          indices = aux[fil].to_s.split('')
+          puts "vector_ind: #{indices}"
+          indice_y = indices[2].to_i(16)
+          indice_x = indices[3].to_i(16)
+          puts "indices: #{indice_x} #{indice_y}"
+          v = busqueda_caja_s(indice_x, indice_y, caj_s)
+          v = v.to_s(16)
+          if v.length()<2
+            v = "0x0" + v
+          else
+            v = "0x" + v
+          end
 
+          puts "valor caja_s: #{v}"
+          @matriz_clave.set_elemento(v,fil,j)
+          puts "nuevo valor: #{@matriz_clave.get_elemento(fil,j)}"
+          fil=fil+1
         end
-        #cambiar por valor de la caja s y hacer el xor
       else
         i=0
+        puts "valor j antes de entrar: #{j}"
         while i<@matriz_clave.filas
-            @matriz_clave.set_elemento((@matriz_clave.get_elemento(i,j-1)^@matriz_clave.get_elemento(i,j-4),i,j))
+            resultado=Integer(@matriz_clave.get_elemento(i,j-1))^Integer(@matriz_clave.get_elemento(i,(j-4)))
+
+            resultado=resultado.to_s(16)
+            if resultado.length() < 2
+              resultado="0x0"+resultado
+            else
+              resultado="0x"+resultado
+            end
+            @matriz_clave.set_elemento(resultado,i,j)
             i=i+1
         end
       end
-      @columnas=@columnas+1
+      @matriz_clave.columnas=@matriz_clave.columnas+1
+      @matriz_clave.mostrar()
+      puts "iter: #{j}"
       j=j+1
     end
   end
@@ -210,14 +246,17 @@ end
 
 
 pepe = Aes.new('00112233445566778899aabbccddeeff', '000102030405060708090a0b0c0d0e0f')
-mat_estado=pepe.generar_matriz(pepe.mensaje_original)
-mat_estado.traspuesta()
-mat_estado.mostrar()
+pepe.matriz_estado=pepe.generar_matriz(pepe.mensaje_original)
+pepe.matriz_estado.traspuesta()
+#mat_estado.mostrar()
 puts ""
-mat_claves=pepe.generar_matriz(pepe.clave)
-mat_claves.traspuesta()
-mat_claves.mostrar()
-puts ""
+pepe.matriz_clave=pepe.generar_matriz(pepe.clave)
+pepe.matriz_clave.traspuesta()
+pepe.matriz_clave.mostrar()
+puts "#{pepe.matriz_clave.columnas}"
 caja_s = Matriz.new(16,16)
 caja_s.rellenar_matriz(CAJA_S)
-caja_s.mostrar()
+#caja_s.mostrar()
+
+pepe.calcular_sublcaves(caja_s)
+pepe.matriz_clave.mostrar()
