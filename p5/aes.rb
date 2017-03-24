@@ -182,19 +182,20 @@ class Aes
 
   def calcular_sublcaves
     j=4 #columnas
-
-    if j%4 == 0
-      aux = @matriz_clave.desplazar_vertical(j)
-      #cambiar por valor de la caja s y hacer el xor
-    else
-
-      @matriz_clave.add_columna() #no hace falta el add columna???
-      i=0
-      while i<@matriz_clave.filas
-          @matriz_clave.add_columna(@matriz_clave.get_elemento(i,j-1)^@matriz_clave.get_elemento(i,j-4), aux[1], aux[2], aux[3])
-          i=i+1
+    while j<16
+      if j%4 == 0
+        aux = @matriz_clave.desplazar_vertical(j)
+        #cambiar por valor de la caja s y hacer el xor
+      else
+        i=0
+        while i<@matriz_clave.filas
+            @matriz_clave.set_elemento((@matriz_clave.get_elemento(i,j-1)^@matriz_clave.get_elemento(i,j-4),i,j))
+            i=i+1
+        end
       end
-    @matriz_clave.add_columna
+      @columnas=@columnas+1
+      j=j+1
+    end
   end
 
 end
