@@ -440,17 +440,42 @@ class Aes
   end
 
 
-  def add_round_key
-    aux = []
+  def add_round_key(ronda)
+    #contador de columna para ir a la siguiente matriz de subclave
+    if ronda == 0
+      subc = 0
+    elsif ronda == 1
+      subc = 4
+    elsif ronda == 2
+      subc = 8
+    elsif ronda == 3
+      subc = 12
+    elsif ronda == 4
+      subc = 16
+    elsif ronda == 5
+      subc = 20
+    elsif ronda == 6
+      subc = 24
+    elsif ronda == 7
+      subc = 28
+    elsif ronda == 8
+      subc = 32
+    elsif ronda == 9
+      subc = 36
+    elsif ronda == 10
+      subc = 40
+    end
 
+    aux = []
     j=0 #columnas
     while j<@matriz_estado.columnas
       i=0 #filas
       while i<@matriz_estado.filas
-        aux << ((@matriz_estado.get_elemento(i,j).to_i(16))^(@matriz_clave.get_elemento(i,j).to_i(16))).to_s(16)
+        aux << ((@matriz_estado.get_elemento(i,j).to_i(16))^(@matriz_clave.get_elemento(i,subc).to_i(16))).to_s(16)
         i=i+1
       end
       j=j+1
+      subc=subc+1
     end
 
     #añadiendo los 0x para que sean hexadecimales
@@ -467,8 +492,31 @@ class Aes
 
   end
 
-  def cifrar
-    
+  def cifrar(caja_s, rcon, matriz_mc)
+    @matriz_clave = generar_matriz(@clave)
+    @matriz_clave.traspuesta()
+    @matriz_estado = generar_matriz(@mensaje_original)
+    @matriz_estado.traspuesta()
+    @matriz_estado.mostrar()
+    calcular_sublcaves(caja_s, rcon)
+    almacenar_subclaves()
+
+    #iteración inicial
+    add_round_key(0) #solo hay que hacer el xor entre estados y clave
+
+    #9 siguientes iteraciones
+    9.times do |n|
+      subbytes(caja_s)
+      shiftrows()
+      mixcolumns(matriz_mc)
+      add_round_key(n+1)
+    end
+
+    #iteración 10 (última), no se hace mixcolumn
+    subbytes(caja_s)
+    shiftrows()
+    add_round_key(10)
+
 
   end
 
@@ -491,31 +539,10 @@ mc.mostrar()
 
 
 pepe = Aes.new('00112233445566778899aabbccddeeff', '000102030405060708090a0b0c0d0e0f')
-pepe.matriz_estado=pepe.generar_matriz(pepe.mensaje_original)
-pepe.matriz_estado.traspuesta()
+pepe.cifrar(caja_s, rcon, mc)
 #pepe.matriz_estado.mostrar()
 puts ""
-pepe.subbytes(caja_s)
-#pepe.matriz_estado.mostrar()
-puts ""
-pepe.shiftrows()
-#pepe.matriz_estado.mostrar()
-puts ""
-j=0
-
-pepe.mixcolumns(mc)
-
+puts "matriz estados:"
 pepe.matriz_estado.mostrar()
-pepe.matriz_clave=pepe.generar_matriz(pepe.clave)
-pepe.matriz_clave.traspuesta()
-puts ""
-puts "matriz clave"
-pepe.matriz_clave.mostrar()
 
-
-
-pepe.calcular_sublcaves(caja_s, rcon)
-#pepe.matriz_clave.mostrar()
-pepe.almacenar_subclaves()
-#pepe.matriz_clave.mostrar()
-pepe.add_round_key()
+puts "clave: #{pepe.array_claves[0]}"

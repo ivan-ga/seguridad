@@ -57,3 +57,7 @@ puts b.to_s(16)
 puts c.to_s(16)
 puts d.to_s(16)
 puts (a^b^c^d).to_s(16)
+
+puts ""
+
+puts (0x000102030405060708090a0b0c0d0e0f ^ 0x00112233445566778899aabbccddeeff).to_s(16)
