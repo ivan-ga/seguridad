@@ -290,11 +290,10 @@ class Aes
           else
             v = "0x" + v
           end
-          #puts "v: #{v}"
+
           @matriz_clave.set_elemento(v,fil,j) #reemplazo por el valor de la caja s
           resultado = Integer(@matriz_clave.get_elemento(fil,j))^Integer(@matriz_clave.get_elemento(fil,j-4))^rcon.get_elemento(fil,n)
-          # puts "#{@matriz_clave.get_elemento(fil,j)} ^ #{@matriz_clave.get_elemento(fil,j-4)} ^ #{rcon.get_elemento(fil,n)}"
-          # puts "resultado: #{resultado}"
+
           resultado=resultado.to_s(16)
           if resultado.length() < 2
             resultado="0x0"+resultado
@@ -309,8 +308,7 @@ class Aes
         i=0
         while i<@matriz_clave.filas
             resultado=Integer(@matriz_clave.get_elemento(i,j-1))^Integer(@matriz_clave.get_elemento(i,(j-4)))
-            # puts "#{@matriz_clave.get_elemento(i,j-1)} ^ #{@matriz_clave.get_elemento(i,(j-4))}"
-            # puts "resultado: #{resultado}"
+
             resultado=resultado.to_s(16)
             if resultado.length() < 2
               resultado="0x0"+resultado
@@ -322,9 +320,6 @@ class Aes
         end
       end
       @matriz_clave.columnas=@matriz_clave.columnas+1
-      # @matriz_clave.mostrar()
-      # puts ""
-      # puts ""
       j=j+1
     end
   end
@@ -441,7 +436,40 @@ class Aes
       end
       col=col+1
     end
-    @matriz_estado.traspuesta #traspuesta ya que los inserté en horizontal
+    @matriz_estado.traspuesta() #traspuesta ya que los inserté en horizontal
+  end
+
+
+  def add_round_key
+    aux = []
+
+    j=0 #columnas
+    while j<@matriz_estado.columnas
+      i=0 #filas
+      while i<@matriz_estado.filas
+        aux << ((@matriz_estado.get_elemento(i,j).to_i(16))^(@matriz_clave.get_elemento(i,j).to_i(16))).to_s(16)
+        i=i+1
+      end
+      j=j+1
+    end
+
+    #añadiendo los 0x para que sean hexadecimales
+    aux.each_with_index do |val, i|
+      if val.length() == 2
+        aux[i] = '0x' + val
+      elsif val.length() == 1
+         aux[i] = '0x0' + val
+      end
+    end
+
+    @matriz_estado.rellenar_matriz(aux)
+    @matriz_estado.traspuesta() #insertados en horizontal, necesito hacer traspuesta
+
+  end
+
+  def cifrar
+    
+
   end
 
 end
@@ -480,7 +508,9 @@ pepe.mixcolumns(mc)
 pepe.matriz_estado.mostrar()
 pepe.matriz_clave=pepe.generar_matriz(pepe.clave)
 pepe.matriz_clave.traspuesta()
-#pepe.matriz_clave.mostrar()
+puts ""
+puts "matriz clave"
+pepe.matriz_clave.mostrar()
 
 
 
@@ -488,3 +518,4 @@ pepe.calcular_sublcaves(caja_s, rcon)
 #pepe.matriz_clave.mostrar()
 pepe.almacenar_subclaves()
 #pepe.matriz_clave.mostrar()
+pepe.add_round_key()
