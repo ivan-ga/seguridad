@@ -351,6 +351,28 @@ class Aes
     end
   end
 
+  def mostrar_estado
+
+    j=0 #columnas
+    aux = []
+
+    while j<@matriz_estado.columnas #están en vertical por eso primero mantengo fija la columna
+      i=0 #filas
+      while i<@matriz_estado.filas
+        aux << @matriz_estado.get_elemento(i,j)
+        i=i+1
+      end
+      j=j+1
+    end
+
+    #eliminar el 0x del principio de cada elemento
+    aux.each_with_index do |c,i|
+      aux[i] = c[2] + c[3]
+    end
+
+    aux.join('')
+  end
+
   #PROCESO SUBBYTES EN LA FASE DE CIFRADO
   def subbytes(caja_s)
     i=0
@@ -497,25 +519,26 @@ class Aes
     @matriz_clave.traspuesta()
     @matriz_estado = generar_matriz(@mensaje_original)
     @matriz_estado.traspuesta()
-    @matriz_estado.mostrar()
     calcular_sublcaves(caja_s, rcon)
     almacenar_subclaves()
 
     #iteración inicial
     add_round_key(0) #solo hay que hacer el xor entre estados y clave
-
+    puts "R0: #{@array_claves[0]} = #{mostrar_estado()}"
     #9 siguientes iteraciones
     9.times do |n|
       subbytes(caja_s)
       shiftrows()
       mixcolumns(matriz_mc)
       add_round_key(n+1)
+      puts "R#{n+1}: #{@array_claves[n+1]} = #{mostrar_estado()}"
     end
 
     #iteración 10 (última), no se hace mixcolumn
     subbytes(caja_s)
     shiftrows()
     add_round_key(10)
+    puts "R10: #{@array_claves[10]} = #{mostrar_estado()}"
 
 
   end
@@ -525,24 +548,30 @@ end
 
 ###########################################################################################
 puts ""
+print "Inserte mensaje: "
+m1 = gets #almacena en la variable m1 el texto introducido por el usuario
+
+#se le da el formato adecuado al mensaje introducido por el usuario
+m1.delete!("\n") #elimino el salto de línea que se incluye por defecto
+m1.split(" ")
+
+print "Inserte clave: "
+c1 = gets #almacena en la variable m1 el texto introducido por el usuario
+
+#se le da el formato adecuado al mensaje introducido por el usuario
+c1.delete!("\n") #elimino el salto de línea que se incluye por defecto
+c1.split(" ")
+puts ""
+
 caja_s = Matriz.new(16,16)
 caja_s.rellenar_matriz(CAJA_S)
-#caja_s.mostrar()
+
 rcon = Matriz.new(4,10)
 rcon.rellenar_matriz(RCON)
-#rcon.mostrar()
 
 mc = Matriz.new(4,4)
 mc.rellenar_matriz(MATRIZ_MIX_COLUMN)
-puts "mixcolumn"
-mc.mostrar()
 
-
-pepe = Aes.new('00112233445566778899aabbccddeeff', '000102030405060708090a0b0c0d0e0f')
-pepe.cifrar(caja_s, rcon, mc)
-#pepe.matriz_estado.mostrar()
+ej1 = Aes.new(m1, c1)
+ej1.cifrar(caja_s, rcon, mc)
 puts ""
-puts "matriz estados:"
-pepe.matriz_estado.mostrar()
-
-puts "clave: #{pepe.array_claves[0]}"
