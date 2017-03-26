@@ -1,5 +1,5 @@
 #Práctica 5: AES
-#AUtor: Iván González Aguiar
+#Autor: Iván González Aguiar
 #alu0100551266@ull.edu.es
 
 ##############################################################################
@@ -203,7 +203,7 @@ class Matriz
   #AÑADIR COLUMNA A LA DERECHA
   def add_columna(v1, v2, v3, v4)
 
-    set_elemento(v1, 0, @columnas) #columnas-1 porque empieza en 0
+    set_elemento(v1, 0, @columnas)
     set_elemento(v2, 1, @columnas)
     set_elemento(v3, 2, @columnas)
     set_elemento(v4, 3, @columnas)
@@ -351,6 +351,7 @@ class Aes
     end
   end
 
+  #MUESTRA LA MATRIZ DE ESTADOS CON TODOS SUS ELEMENTOS UNIDOS EN UNA LINEA
   def mostrar_estado
 
     j=0 #columnas
@@ -523,8 +524,9 @@ class Aes
     almacenar_subclaves()
 
     #iteración inicial
-    add_round_key(0) #solo hay que hacer el xor entre estados y clave
+    add_round_key(0) #solo hay que hacer el xor entre estado y clave
     puts "R0: #{@array_claves[0]} = #{mostrar_estado()}"
+
     #9 siguientes iteraciones
     9.times do |n|
       subbytes(caja_s)
