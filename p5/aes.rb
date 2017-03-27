@@ -48,10 +48,10 @@ MATRIZ_MIX_COLUMN = [0x2, 0x3, 0x1, 0x1,
 0x1, 0x1, 0x2, 0x3,
 0x3, 0x1, 0x1, 0x2]
 
-MATRIZ_MIX_COLUMN_INV = [0x14, 0x11, 0x13, 0x9,
-0x9, 0x14, 0x11, 0x13,
-0x13, 0x9, 0x14, 0x11,
-0x11, 0x13, 0x9, 0x14]
+MATRIZ_MIX_COLUMN_INV = [14, 11, 13, 9,
+9, 14, 11, 13,
+13, 9, 14, 11,
+11, 13, 9, 14]
 
 #MATRICES PARA LA BUSQUEDA DE VALORES AL MULTIPLICAR EN MIXCOLUMN
 #multiplicación por 2
@@ -292,6 +292,35 @@ class Matriz
     end
   end
 
+  def desplazar_horizontal_inv(fila)
+    col = 0
+    arr_aux = []
+
+    if fila == 1
+      arr_aux << get_elemento(fila, 3)
+      arr_aux << get_elemento(fila, 0)
+      arr_aux << get_elemento(fila, 1)
+      arr_aux << get_elemento(fila, 2)
+
+    elsif fila == 2
+      arr_aux << get_elemento(fila, 2)
+      arr_aux << get_elemento(fila, 3)
+      arr_aux << get_elemento(fila, 0)
+      arr_aux << get_elemento(fila, 1)
+
+    elsif fila == 3
+      arr_aux << get_elemento(fila, 1)
+      arr_aux << get_elemento(fila, 2)
+      arr_aux << get_elemento(fila, 3)
+      arr_aux << get_elemento(fila, 0)
+    end
+
+    while col<@columnas
+      set_elemento(arr_aux[col],fila,col)
+      col=col+1
+    end
+  end
+
   #AÑADIR COLUMNA A LA DERECHA
   def add_columna(v1, v2, v3, v4)
 
@@ -502,9 +531,9 @@ class Aes
 
   def shiftrows_inv
     #la fila 0 no se desplaza
-    @matriz_estado.desplazar_horizontal(1)
-    @matriz_estado.desplazar_horizontal(2)
-    @matriz_estado.desplazar_horizontal(3)
+    @matriz_estado.desplazar_horizontal_inv(1)
+    @matriz_estado.desplazar_horizontal_inv(2)
+    @matriz_estado.desplazar_horizontal_inv(3)
   end
 
   #PROCESO MIXCOLUMNS EN LA FASE DE CIFRADO
@@ -700,7 +729,7 @@ class Aes
 
   end
 
-  def descifrar(caja_s, rcon, matriz_mc)
+  def descifrar(caja_s, rcon, matriz_mc, caja_s_inv)
     @matriz_clave = generar_matriz(@clave)
     @matriz_clave.traspuesta()
     @matriz_estado = generar_matriz(@mensaje_original) #mensaje original es el mensaje cifrado
@@ -709,17 +738,19 @@ class Aes
     almacenar_subclaves()
 
     #iteración 10 (última), no se hace mixcolumn
-    subbytes(caja_s)
-    shiftrows()
+
     add_round_key(10)
+
+    shiftrows_inv()
+    subbytes(caja_s_inv)
     puts "R10: #{@array_claves[10]} = #{mostrar_estado()}"
 
     #9 siguientes iteraciones
     9.downto(1) do |n|
-      subbytes(caja_s)
-      shiftrows()
-      mixcolumns_inv(matriz_mc)
       add_round_key(n)
+      mixcolumns_inv(matriz_mc)
+      shiftrows_inv()
+      subbytes(caja_s_inv)
       puts "R#{n}: #{@array_claves[n]} = #{mostrar_estado()}"
     end
 
@@ -765,12 +796,31 @@ mc.rellenar_matriz(MATRIZ_MIX_COLUMN)
 mc_inv = Matriz.new(4,4)
 mc_inv.rellenar_matriz(MATRIZ_MIX_COLUMN_INV)
 
+print "Inserte mensaje: "
+m1 = gets #almacena en la variable m1 el texto introducido por el usuario
+#se le da el formato adecuado al mensaje introducido por el usuario
+m1.delete!("\n") #elimino el salto de línea que se incluye por defecto
+#m1 = m1.split(" ")
+print "Inserte clave: "
+c1 = gets #almacena en la variable m1 el texto introducido por el usuario
+c1.delete!("\n") #elimino el salto de línea que se incluye por defecto
+#c1 = c1.split(" ")
 
-ej1 = Aes.new('00112233445566778899aabbccddeeff', '000102030405060708090a0b0c0d0e0f')
-ej1.cifrar(caja_s, rcon, mc)
+puts " "
+puts "MENU"
+puts "==========="
 puts ""
-puts ""
+puts "Elige una opción:
+1: Cifrar
+2: Descifrar"
 
-puts "DESCIFRADO"
-ej1 = Aes.new('69c4e0d86a7b0430d8cdb78070b4c55a', '000102030405060708090a0b0c0d0e0f')
-ej1.cifrar(caja_s_inv, rcon, mc_inv)
+case gets.strip
+  when "1"
+    puts ""
+    ej1 = Aes.new(m1, c1)
+    ej1.cifrar(caja_s, rcon, mc)
+  when "2"
+    puts ""
+    ej1 = Aes.new(m1, c1)
+    ej1.descifrar(caja_s, rcon, mc_inv, caja_s_inv)
+end
