@@ -759,7 +759,6 @@ class Aes
     add_round_key(0) #solo hay que hacer el xor entre estado y clave
     puts "R0: #{@array_claves[0]} = #{mostrar_estado()}"
 
-    @mensaje_cifrado = mostrar_estado()
 
   end
 
@@ -824,11 +823,16 @@ case gets.strip
     puts ""
     puts "Mensaje cifrado: #{ej1.mensaje_cifrado}"
     puts ""
+
+    #modificación
+    puts "Iteración 2:"
+    ej2 = Aes.new(ej1.mensaje_cifrado, m1)
+    ej2.cifrar(caja_s, rcon, mc)
+    puts ""
+    puts "Mensaje cifrado: #{ej2.mensaje_cifrado}"
+    puts ""
   when "2"
     puts ""
     ej1 = Aes.new(m1, c1)
     ej1.descifrar(caja_s, rcon, mc_inv, caja_s_inv)
-    puts ""
-    puts "Mensaje descifrado: #{ej1.mensaje_cifrado}"
-    puts ""
 end
