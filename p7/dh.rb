@@ -5,12 +5,14 @@
 
 class Dh
 
+  #Setters y getters
   attr_accessor :secreto
   attr_accessor :y
   attr_accessor :alfa
   attr_accessor :np
   attr_accessor :k
 
+  #Constructor
   def initialize(secreto, alfa, np)
     @secreto =  secreto #la variable X del enunciado
     @y = nil
@@ -19,10 +21,12 @@ class Dh
     @k = nil
   end
 
+  #Método para calcular la variable Y
   def calcular_y
     @y = (@alfa ** @secreto) % @np
   end
 
+  #Método para calcular la variable K (clave)
   def calcular_clave(y) #esta y es la y del otro participante en la comunicación
     @k = (y ** @secreto) % @np
   end
@@ -34,19 +38,19 @@ end
 
 puts ""
 print "Inserte número primo: "
-num = gets.to_i #almacena en la variable m1 el texto introducido por el usuario
+num = gets.to_i
 puts " "
 
 print "Inserte alfa: "
-alfa = gets.to_i #almacena en la variable c1 la clave introducida por el usuario
+alfa = gets.to_i
 puts " "
 
 print "Inserte secreto de A: "
-xa = gets.to_i #almacena en la variable c1 la clave introducida por el usuario
+xa = gets.to_i
 puts " "
 
 print "Inserte secreto de B: "
-xb = gets.to_i #almacena en la variable c1 la clave introducida por el usuario
+xb = gets.to_i
 puts " "
 
 a = Dh.new(xa, alfa, num)
