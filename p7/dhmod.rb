@@ -3,6 +3,24 @@
 #alu0100551266@ull.edu.es
 ################################################################################
 
+#Algoritmo de exponenciación rápida
+def exponenciacion(base, b, modulo) #b es el exponente
+      x = 1 #Inicialización de la x a 1
+      y = base%modulo #la y es igual a la base
+
+      while (b>0) and (y>1) do
+          if ((b%2)!=0) #si b es impar
+              x = (x*y)%modulo
+              b = b-1
+          else #si b es par
+              y = (y*y)%modulo
+              b = b/2
+          end
+      end
+
+      x
+  end
+
 class Dh
 
   #Setters y getters
@@ -21,23 +39,6 @@ class Dh
     @k = nil
   end
 
-  #Algoritmo de exponenciación rápida
-  def exponenciacion(base, b, modulo) #b es el exponente
-        x = 1 #Inicialización de la x a 1
-        y = base%modulo #la y es igual a la base
-
-        while (b>0) and (y>1) do
-            if ((b%2)!=0) #si b es impar
-                x = (x*y)%modulo
-                b = b-1
-            else #si b es par
-                y = (y*y)%modulo
-                b = b/2
-            end
-        end
-
-        x
-    end
 
   #Método para calcular la variable Y
   def calcular_y
@@ -79,8 +80,7 @@ participantes.times do |i|
 
 end
 
-puts @p1.secreto
-puts @p2.secreto
+
 
 puts "CALCULO DE LA Y"
 participantes.times do |i|
@@ -94,18 +94,32 @@ end
 puts " "
 
 puts "CALCULO DE LA K"
-#a.calcular_clave(b.y)
-#b.calcular_clave(a.y)
 
 participantes.times do |i|
-  if i+2 <= participantes #si no ha llegado al último
-    k1 = instance_variable_get("@p#{i+1}").calcular_clave(instance_variable_get("@p#{i+2}").y)
-    k2 = instance_variable_get("@p#{i+1}").calcular_clave(instance_variable_get("@p#{i+2}").y)
+  if i+1 < participantes #si no ha llegado al último
+    z = instance_variable_get("@p#{i+1}").calcular_clave(instance_variable_get("@p#{i+2}").y)
+    instance_variable_set("@z#{i+1}", z)
   else #si ha llegado al último que intercambie claves con el primero
-    k = instance_variable_get("@p#{i+1}").calcular_clave(instance_variable_get("@p#{i+1}").y)
+    z = instance_variable_get("@p#{i+1}").calcular_clave(@p1.y)
+    instance_variable_set("@z#{i+1}", z)
   end
-  puts "k"+"#{i+1}: #{k1}"
-  puts "k"+"#{i+1}: #{k1}"
+
 end
 
-puts ""
+cuenta = 3
+participantes.times do |i|
+
+  if cuenta > 0
+    k = instance_variable_get("@z#{i+1}")
+    exp = instance_variable_get("@p#{cuenta}").secreto
+    m = instance_variable_get("@p#{cuenta}").np
+    resultado = exponenciacion(k, exp, m)
+    puts "K"+"#{i+1}: #{resultado}"
+  end
+
+  cuenta = cuenta+1
+  if cuenta > participantes
+    cuenta = 1
+  end
+end
+puts " "
