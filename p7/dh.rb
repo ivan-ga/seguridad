@@ -21,7 +21,8 @@ class Dh
     @k = nil
   end
 
-  def exponenciacion(base,b,modulo)
+  #Algoritmo de exponenciación rápida
+  def exponenciacion(base,b,modulo) #b es el exponente
         x = 1 #Inicialización de la x a 1
         y = base % modulo #la y es igual a la base
 
