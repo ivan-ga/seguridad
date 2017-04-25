@@ -21,14 +21,33 @@ class Dh
     @k = nil
   end
 
+  def exponenciacion(base,b,modulo)
+        x = 1 #Inicialización de la x a 1
+        y = base % modulo #la y es igual a la base
+
+        while (b > 0) and (y>1) do
+            if ((b % 2)!=0) #si b es impar
+                x = (x*y) % modulo
+                b = b-1
+            else #si b es par
+                y = (y*y) % modulo
+                b = b/2
+            end
+        end
+
+        x
+    end
+
   #Método para calcular la variable Y
   def calcular_y
-    @y = (@alfa ** @secreto) % @np
+    @y = exponenciacion(@alfa, @secreto, @np)
+    #@y = (@alfa ** @secreto) % @np
   end
 
   #Método para calcular la variable K (clave)
   def calcular_clave(y) #esta y es la y del otro participante en la comunicación
-    @k = (y ** @secreto) % @np
+    @k = exponenciacion(y, @secreto, @np)
+    #@k = (y ** @secreto) % @np
   end
 
 
