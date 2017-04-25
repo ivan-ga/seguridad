@@ -85,7 +85,6 @@ puts @p2.secreto
 puts "CALCULO DE LA Y"
 participantes.times do |i|
   instance_variable_get("@p#{i+1}").calcular_y
-
 end
 
 participantes.times do |i|
@@ -95,9 +94,18 @@ end
 puts " "
 
 puts "CALCULO DE LA K"
-a.calcular_clave(b.y)
-b.calcular_clave(a.y)
+#a.calcular_clave(b.y)
+#b.calcular_clave(a.y)
 
-puts "k (generada en A): #{a.k}"
-puts "k (generada en B): #{b.k}"
+participantes.times do |i|
+  if i+2 <= participantes #si no ha llegado al último
+    k1 = instance_variable_get("@p#{i+1}").calcular_clave(instance_variable_get("@p#{i+2}").y)
+    k2 = instance_variable_get("@p#{i+1}").calcular_clave(instance_variable_get("@p#{i+2}").y)
+  else #si ha llegado al último que intercambie claves con el primero
+    k = instance_variable_get("@p#{i+1}").calcular_clave(instance_variable_get("@p#{i+1}").y)
+  end
+  puts "k"+"#{i+1}: #{k1}"
+  puts "k"+"#{i+1}: #{k1}"
+end
+
 puts ""
