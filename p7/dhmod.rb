@@ -19,7 +19,7 @@ def exponenciacion(base, b, modulo) #b es el exponente
       end
 
       x
-  end
+end
 
 class Dh
 
@@ -81,7 +81,6 @@ participantes.times do |i|
 end
 
 
-
 puts "CALCULO DE LA Y"
 participantes.times do |i|
   instance_variable_get("@p#{i+1}").calcular_y
@@ -93,28 +92,35 @@ participantes.times do |i|
 end
 puts " "
 
-puts "CALCULO DE LA K"
+puts "CALCULO DE LA Z" #clave intermedia
 
 participantes.times do |i|
   if i+1 < participantes #si no ha llegado al último
     z = instance_variable_get("@p#{i+1}").calcular_clave(instance_variable_get("@p#{i+2}").y)
     instance_variable_set("@z#{i+1}", z)
+    puts "Z"+"#{i+1}: #{z}"
   else #si ha llegado al último que intercambie claves con el primero
     z = instance_variable_get("@p#{i+1}").calcular_clave(@p1.y)
     instance_variable_set("@z#{i+1}", z)
+    puts "Z"+"#{i+1}: #{z}"
   end
 
 end
 
-cuenta = 3
+
+puts " "
+puts "CALCULO DE LA K"
+
+cuenta = participantes #variable para controlar que no se me salga del número de participantes (también podía haber usado módulo)
 participantes.times do |i|
 
   if cuenta > 0
-    k = instance_variable_get("@z#{i+1}")
+    k = instance_variable_get("@z#{i+1}") #clave intermedia, Z
     exp = instance_variable_get("@p#{cuenta}").secreto
     m = instance_variable_get("@p#{cuenta}").np
     resultado = exponenciacion(k, exp, m)
     puts "K"+"#{i+1}: #{resultado}"
+    instance_variable_set("@z#{i+1}", resultado)
   end
 
   cuenta = cuenta+1
