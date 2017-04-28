@@ -73,7 +73,7 @@ class Probador #el A del enunciado
 
   #Calcular el valor de a
   def calcular_a(n)
-    @a = (@x**2) % n
+    @a = exponenciacion(@x, 2, n)
   end
 
   #Calcular el valor de y
@@ -87,7 +87,7 @@ class Probador #el A del enunciado
 
   #Calcular el valor de v, clave pública de A
   def calcular_v(s, n)
-    @v = (s**2) % n
+    @v = exponenciacion(s, 2, n)
   end
 
 
@@ -112,7 +112,7 @@ class Verificador #el B del enunciado
   #Verifica si el probador es quien dice ser
   def verificar(n, v)
     if @e == 0
-      if (@y**2)%n == @a
+      if exponenciacion(@y, 2, n) == @a
         puts "#{y}² = #{@a}(mod #{n})"
         puts "VERIFICACION CORRECTA"
       else
@@ -120,7 +120,7 @@ class Verificador #el B del enunciado
         puts "VERIFICACION FALLIDA"
       end
     else
-      if (@y**2)%n == (@a*v)%n
+      if exponenciacion(@y, 2, n) == (@a*v)%n
         puts "#{y}² = #{@a}*#{v}(mod #{n})"
         puts "VERIFICACION CORRECTA"
       else
