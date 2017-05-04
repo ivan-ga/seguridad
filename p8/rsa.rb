@@ -42,40 +42,52 @@ end
 #Comprueba si un número es divisible por otro
 def divisible(num)
 
-    PRIMOS.size().times do |i|
+    es_divisible = nil
+
+    (PRIMOS.size()).times do |i|
 
       if(num % PRIMOS[i]) == 0
-        divisible = true
+        es_divisible = true
       else
-        divisible = false
+        es_divisible = false
         break
       end
 
     end
 
-    divisible
+    es_divisible
 end
 
 #Test de primalidad
 def test_primalidad(num)
+  retorna = nil
 
   if divisible(num)
-    return false
+    retorna = false
 
   else
-
     vector_enteros = []
 
     if num > 100
 
-      100.times do |i|
-        vector_enteros << rand(1..num-1)
+      entero = rand(1..num-1)
+      vector_enteros << entero
+      99.times do |i|
+        while vector_enteros.include? entero #para que no repita números
+          entero = rand(1..num-1)
+        end
+        vector_enteros << entero
       end
 
     else
 
+      entero = rand(1..num-1)
+      vector_enteros << entero
       (num/2).times do |i|
-        vector_enteros << rand(1..num-1)
+        while vector_enteros.include? entero #para que no repita números
+          entero = rand(1..num-1)
+        end
+        vector_enteros << entero
       end
 
     end
@@ -86,18 +98,21 @@ def test_primalidad(num)
     vector_enteros.each_with_index do |val, i|
       resultado[i] = exponenciacion(val, exponente, num)
 
-      if resultado[i] != 1 || resultado[i] != -1
+      if (resultado[i] != 1) && (resultado[i] != (num-1))
         retorna = false
         break
       end
     end
 
-    if resultado.todo_unos?
-      retorna = false
-    else
-      retorna = true
+    if retorna == nil
+      if resultado.todo_unos?
+        retorna = false
+      else
+        retorna = true
+      end
     end
 
 
     retorna
+  end
 end
