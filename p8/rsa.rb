@@ -39,7 +39,7 @@ def exponenciacion(base,b,modulo) #b es el exponente
       x
 end
 
-#Comprueba si un número es divisible por otro
+#Comprueba si un número es divisible por los primos pequeños
 def divisible(num)
 
     es_divisible = nil
