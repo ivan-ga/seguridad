@@ -3,6 +3,14 @@
 # alu0100551266@ull.edu.es
 ################################################################################
 
+#hash para asignar a cada letra del alfabeto un valor
+ALFABETO = {"A"=>0,"B"=> 1,"C"=> 2,"D"=> 3,"E"=> 4,"F"=> 5,"G"=> 6,"H"=> 7,
+"I"=> 8,"J"=> 9, "K"=>10, "L"=>11, "M"=>12, "N"=>13, "O"=>14, "P"=>15, "Q"=>16,
+"R"=>17, "S"=>18, "T"=>19, "U"=>20, "V"=>21, "W"=>22, "X"=>23, "Y"=>24, "Z"=>25}
+
+TAM_ALFABETO = ALFABETO.size() #tamaño del alfabeto
+
+
 #Abro la clase Array e incluyo un método que comprueba si todos los elementos de un array
 #son iguales a uno
 class Array
@@ -115,4 +123,87 @@ def test_primalidad(num)
 
     retorna
   end
+end
+
+#Algoritmo de Euclides para comprobar si dos números son primos entre sí
+def euclides(a, b)
+  if(a < b)
+    dividendo = b
+    divisor = a
+  else
+    dividendo = a
+    divisor = b
+  end
+
+  resto = 1
+
+  while(resto > 0)
+    cociente = dividendo / divisor
+    resto = dividendo % divisor
+    dividendo = divisor
+    divisor = resto
+  end
+
+  if(dividendo != 1)
+    return false
+  else
+    return true
+  end
+
+end
+
+#Algoritmo de Euclides extendido, para calcular el inverso de un número modulo con otro
+def euclides_extendido(a, b)
+
+  z = nil
+  anterior = 1
+  ante_anterior = 0
+
+  if(a < b)
+    dividendo = b
+    divisor = a
+  else
+    dividendo = a
+    divisor = b
+  end
+
+  resto = 1
+
+  while(resto > 0)
+    cociente = dividendo / divisor
+    resto = dividendo % divisor
+
+    if resto == 0 #para que no vuelva a calcular la z
+      break
+    end
+
+    z = ((-1*cociente) * anterior) + ante_anterior
+    ante_anterior = anterior
+    anterior = z
+    dividendo = divisor
+    divisor = resto
+  end
+
+  z
+
+end
+
+#Método para calcular j-1, tamaño de bloques de texto
+def calcular_j(n)
+  j = 0
+  resultado = 0
+
+  while resultado<n
+    resultado = n ** j
+    j = j + 1
+  end
+
+  j
+end
+
+#Método para la codificación del texto
+def codificar(texto, n)
+  j = nil #el j-1 del enunciado
+
+
 end
