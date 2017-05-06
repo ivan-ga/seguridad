@@ -219,6 +219,7 @@ class Rsa
 
     j-1
   end
+
   #Método para la codificación del texto
   def codificar(n)
 
@@ -247,10 +248,12 @@ class Rsa
 
   end
 
+  #Método para calcular fi de n
   def calcular_fi(p, q)
     @fi = (@pe-1)*(@q-1)
   end
 
+  #Método para cifrar el mensaje
   def cifrar(n, mensaje_en_bloques, e)
     resultado = []
     mensaje_en_bloques.each do |val|
@@ -260,6 +263,7 @@ class Rsa
     @mensaje_cifrado = resultado
   end
 
+  #Método para descifrar el mensaje
   def descifrar(n, mensaje_en_bloques, e)
     resultado = []
     mensaje_en_bloques.each do |val|
