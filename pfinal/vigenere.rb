@@ -5,11 +5,11 @@
 ####################################################################################################
 
 #hash para asignar a cada letra del alfabeto un valor
-ALFABETO = {"A"=>0,"B"=> 1,"C"=> 2,"D"=> 3,"E"=> 4,"F"=> 5,"G"=> 6,"H"=> 7,
+ALFABETO_VIGENERE = {"A"=>0,"B"=> 1,"C"=> 2,"D"=> 3,"E"=> 4,"F"=> 5,"G"=> 6,"H"=> 7,
 "I"=> 8,"J"=> 9, "K"=>10, "L"=>11, "M"=>12, "N"=>13, "O"=>14, "P"=>15, "Q"=>16,
 "R"=>17, "S"=>18, "T"=>19, "U"=>20, "V"=>21, "W"=>22, "X"=>23, "Y"=>24, "Z"=>25}
 
-TAM_ALFABETO = ALFABETO.size() #tamaño del alfabeto
+TAM_ALFABETO_VIGENERE = ALFABETO_VIGENERE.size() #tamaño del alfabeto
 
 class Vigenere
   attr_accessor :mensaje_original
@@ -35,12 +35,12 @@ class Vigenere
       j = 0
       clave.split('').each do |c| #cada letra de la clave
 
-        num = ALFABETO[val[j]].to_i + ALFABETO[c].to_i #la suma de los valores de cada letra dentro del alfabeto
+        num = ALFABETO_VIGENERE[val[j]].to_i + ALFABETO_VIGENERE[c].to_i #la suma de los valores de cada letra dentro del alfabeto
 
         if num < 26
-          resultado << ALFABETO.key(num)
+          resultado << ALFABETO_VIGENERE.key(num)
         else
-          resultado << ALFABETO.key(num % TAM_ALFABETO)
+          resultado << ALFABETO_VIGENERE.key(num % TAM_ALFABETO_VIGENERE)
         end
 
         j = j+1
@@ -65,11 +65,11 @@ class Vigenere
       j = 0
       clave.split('').each do |c| #cada letra de la clave
 
-        num = ALFABETO[val[j]].to_i - ALFABETO[c].to_i #la resta de los valores de cada letra dentro del alfabeto
+        num = ALFABETO_VIGENERE[val[j]].to_i - ALFABETO_VIGENERE[c].to_i #la resta de los valores de cada letra dentro del alfabeto
         if num >= 0
-          resultado << ALFABETO.key(num)
+          resultado << ALFABETO_VIGENERE.key(num)
         else
-          resultado << ALFABETO.key(num % TAM_ALFABETO)
+          resultado << ALFABETO_VIGENERE.key(num % TAM_ALFABETO_VIGENERE)
         end
 
         j = j+1
